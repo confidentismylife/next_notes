@@ -41,16 +41,16 @@ const Header = () => {
       <div className="header-overlay">
         <nav className="py-4">
           <div className="flex justify-between items-center px-8">
-            <Link href="/" className="text-xl font-bold text-white">
+            <Link href="/" className="text-2xl font-bold text-black hover:text-gray-700 transition-colors">
               个人博客
             </Link>
 
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="text-white hover:text-gray-300 transition-colors">
+            <div className="flex items-center space-x-12">
+              <Link href="/" className="text-xl font-semibold text-black hover:text-gray-700 transition-colors">
                 分类
               </Link>
-              <Link href="/" className="text-white hover:text-gray-300 transition-colors">
-                 gitHub
+              <Link href="/" className="text-xl font-semibold text-black hover:text-gray-700 transition-colors">
+                GitHub
               </Link>
               {/* 头像和个人介绍 */}
               <div 
@@ -63,6 +63,7 @@ const Header = () => {
                     src="/dog.jpg"
                     alt="头像"
                     fill
+                    sizes="(max-width: 768px) 40px, 48px"
                     className="object-cover"
                   />
                 </div>
@@ -76,6 +77,7 @@ const Header = () => {
                           src="/dog.jpg"
                           alt="头像"
                           fill
+                          sizes="(max-width: 768px) 48px, 64px"
                           className="object-cover"
                         />
                       </div>

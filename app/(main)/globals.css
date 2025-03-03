@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 全局动画 */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+}
+
+/* 其他全局样式 */
+
 @keyframes float-1 {
   0%, 100% { transform: translate(0, 0) rotate(12deg); }
   50% { transform: translate(10px, -10px) rotate(12deg); }
@@ -36,19 +48,6 @@
 
 .animate-float-4 {
   animation: float-4 8s ease-in-out infinite;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-scroll {
-  animation: scroll 30s linear infinite;
 }
 
 .tags-group-wrapper {

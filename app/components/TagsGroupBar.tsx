@@ -4,6 +4,7 @@ import { useEffect, useState, memo, useCallback } from 'react'
 import Image from 'next/image';
 import TagsTitle from './TagsTitle';
 import { groupIcons, type GroupIcon } from '../data/icons'
+import dynamic from 'next/dynamic'
 
 // 使用 memo 优化重复渲染
 const TagIcon = memo(function TagIcon({ color, img, title }: { 
@@ -29,7 +30,7 @@ const TagIcon = memo(function TagIcon({ color, img, title }: {
 })
 
 // 优化图标对组件
-const IconPair = memo(function IconPair({ 
+export const IconPair = memo(function IconPair({ 
     icon, 
     groupIndex, 
     index 
@@ -49,31 +50,9 @@ const IconPair = memo(function IconPair({
 })
 
 // 图标组件
-const TagsIcons = memo(function TagsIcons() {
-    const [isLoaded, setIsLoaded] = useState(false)
-
-    useEffect(() => {
-        setIsLoaded(true)
-    }, [])
-
-    const renderIconGroup = useCallback((groupIndex: number) => (
-        groupIcons.map((icon, index) => (
-            <IconPair 
-                key={`${groupIndex}-${index}`}
-                icon={icon}
-                groupIndex={groupIndex}
-                index={index}
-            />
-        ))
-    ), [])
-
-    if (!isLoaded) return null
-
-    return (
-        <div className='tags-group-wrapper flex flex-nowrap animate-scroll'>
-            {[...Array(2)].map((_, groupIndex) => renderIconGroup(groupIndex))}
-        </div>
-    )
+const TagsIcons = dynamic(() => import('./TagsIcons'), {
+    ssr: false,
+    loading: () => <div className="animate-pulse h-56 bg-gray-200 rounded-xl" />
 })
 
 export default memo(function TagsGroupBar() {

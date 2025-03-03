@@ -1,6 +1,9 @@
+'use client'
+
 import { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import ArticleCard from './ArticleCard'
+import styles from './SecondScreen.module.css'
 
 // 动态导入 TagsGroupBar
 const TagsGroupBar = dynamic(() => import('./TagsGroupBar'), {
@@ -22,7 +25,7 @@ function TagsGroupBarSkeleton() {
 
 export default function SecondScreen() {
   return (
-    <div className="min-h-screen bg-[#f7f9fe] w-full px-20 py-10">
+    <div className={styles.container}>
       <div>
         <div className="mt-8 grid grid-cols-2 gap-6">
           <div className="bg-white rounded-2xl overflow-hidden shadow-sm h-[250px]">
