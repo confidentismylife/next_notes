@@ -1,42 +1,10 @@
-'use client';
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
 
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-
-const ScrollButton = () => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      // 只要有滚动就隐藏按钮
-      setIsVisible(window.scrollY === 0);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleScrollClick = () => {
-    const scrollHeight = window.innerHeight;
-    const currentScroll = window.scrollY;
-    const targetScroll = currentScroll + scrollHeight;
-    
-    const maxScroll = document.documentElement.scrollHeight - scrollHeight;
-    const finalScroll = Math.min(targetScroll, maxScroll);
-    console.log(finalScroll);
-    window.scrollTo({
-      top: finalScroll,
-      behavior: 'smooth'
-    });
-  };
-
-  if (!isVisible) return null;
-
+// 静态按钮组件
+function StaticButton() {
   return (
-    <button
-      onClick={handleScrollClick}
-      className="fixed bottom-8 left-1/2 transform -translate-x-1/2 hover:scale-110 transition-transform duration-200 z-50"
-    >
+    <button className="hover:scale-110 transition-transform duration-200">
       <Image 
         src="/huojian.png" 
         alt="滚动" 
@@ -45,7 +13,18 @@ const ScrollButton = () => {
         className="animate-bounce"
       />
     </button>
-  );
-};
+  )
+}
 
-export default ScrollButton; 
+// 客户端交互逻辑组件
+const ScrollInteraction = dynamic(() => import('./ScrollInteraction'), {
+  ssr: false
+})
+
+export default function ScrollButton() {
+  return (
+    <ScrollInteraction>
+      <StaticButton />
+    </ScrollInteraction>
+  )
+} 
