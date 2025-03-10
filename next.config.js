@@ -15,7 +15,14 @@ const nextConfig = {
         // 禁用未使用的优化
         dangerouslyAllowSVG: false,
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+        unoptimized: true,
+        domains: [
+            "firebasestorage.googleapis.com",
+            "raw.githubusercontent.com",
+            'res.cloudinary.com'
+        ],
     },
+    swcMinify: true, // 使用 SWC 进行代码压缩
     // 优化构建输出
     compress: true,
     poweredByHeader: false,
