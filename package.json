@@ -5,7 +5,7 @@
     "homepage": "https://confidentismylife.github.io/",
     "scripts": {
         "dev": "next dev",
-        "build": "next build && next export",
+        "build": "next build",
         "start": "next start",
         "lint": "next lint",
         "analyze": "cross-env ANALYZE=true next build",
