@@ -57,7 +57,7 @@ const TagsIcons = dynamic(() => import('./TagsIcons'), {
 
 export default memo(function TagsGroupBar() {
     return (
-        <div className="mt-10 tags-group-all flex -rotate-[20deg] h-56 w-[900px] relative">
+        <div className="mt-32 tags-group-all flex -rotate-[20deg] h-56 w-[900px] relative">
             <TagsTitle />
             <TagsIcons />
         </div>

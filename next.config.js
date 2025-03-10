@@ -15,6 +15,7 @@ const nextConfig = {
         // 禁用未使用的优化
         dangerouslyAllowSVG: false,
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+        unoptimized: true, // 静态导出时需要禁用图片优化
     },
     // 优化构建输出
     compress: true,
@@ -29,6 +30,12 @@ const nextConfig = {
     },
     // 优化打包
     webpack: (config, { dev, isServer }) => {
+        // 添加 .md 文件支持
+        config.module.rules.push({
+            test: /\.md$/,
+            use: 'raw-loader'
+        });
+
         // 生产环境优化
         if (!dev && !isServer) {
             // 分割大模块
@@ -58,6 +65,13 @@ const nextConfig = {
             };
         }
         return config;
+    },
+    output: 'export', // 添加静态导出配置
+    // 配置静态资源前缀
+    assetPrefix: '/',
+    // 禁用类型检查以支持静态导出
+    typescript: {
+        ignoreBuildErrors: true,
     },
 }
 

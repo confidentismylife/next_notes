@@ -10,6 +10,7 @@ export default function FirstScreenStatic({ TypedTextComponent, ScrollButtonComp
 		<div className="relative h-screen w-full">
 			<BackgroundImage />
 			<div className="relative z-10">
+	
 				<div className="text-7xl font-bold [text-shadow:_4px_4px_16px_rgb(255_255_255_/_90%),_6px_6px_20px_rgb(128_128_128_/_50%)]">
 					<span className="flex flex-row items-center absolute top-[250px] right-[60px]">
 						<span>NEXT</span>
