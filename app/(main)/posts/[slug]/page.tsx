@@ -32,9 +32,11 @@ export async function generateStaticParams() {
 
 // 定义组件
 export default async function PostPage({ params }: { params: { slug: string } }) {
+    console.log(`渲染文章页面: ${params.slug}`);
     const post = await getPostBySlug(params.slug)
 
     if (!post) {
+        console.log(`未找到文章: ${params.slug}`);
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">
@@ -45,9 +47,50 @@ export default async function PostPage({ params }: { params: { slug: string } })
         )
     }
 
+    console.log(`找到文章: ${post.title}`);
+    console.log(`目录数据类型: ${typeof post.toc}`);
+    console.log(`目录数据长度: ${post.toc?.length || 0}`);
+    console.log(`目录数据内容:`, JSON.stringify(post.toc || []));
+    
+    // 确保目录数据有效
+    // 修改这里的逻辑，确保即使在开发环境中也能正确处理目录数据
+    let tocData = [];
+    
+    // 检查 post.toc 是否为有效数组
+    if (Array.isArray(post.toc)) {
+        tocData = post.toc;
+    } else if (typeof post.toc === 'string') {
+        // 如果是字符串，尝试解析为JSON
+        try {
+            const parsed = JSON.parse(post.toc);
+            if (Array.isArray(parsed)) {
+                tocData = parsed;
+            }
+        } catch (e) {
+            console.error("无法解析目录数据:", e);
+        }
+    }
+    
+    // 如果目录仍然为空，但我们有文章内容，尝试手动提取目录
+    if (tocData.length === 0 && post.content) {
+        console.log("目录为空，尝试从内容中提取...");
+        const headingRegex = /^(#{1,6})\s+(.+)$/gm;
+        let match;
+        while ((match = headingRegex.exec(post.content)) !== null) {
+            const level = match[1].length;
+            const text = match[2].trim();
+            const indent = "  ".repeat(level - 1);
+            tocData.push(`${indent}${text}`);
+        }
+        console.log("手动提取的目录:", tocData);
+    }
+        
+    // 打印目录数据，用于调试
+    console.log("传递给TableOfContents的目录数据:", tocData);
+
     const components: Components = {
         h1: ({ children }) => (
-            <h1 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-3xl font-bold mb-4">
+            <h1 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-3xl font-bold mb-4 mt-8">
                 {children}
             </h1>
         ),
@@ -60,6 +103,21 @@ export default async function PostPage({ params }: { params: { slug: string } })
             <h3 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-xl font-bold mt-6 mb-3">
                 {children}
             </h3>
+        ),
+        h4: ({ children }) => (
+            <h4 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-lg font-bold mt-5 mb-2">
+                {children}
+            </h4>
+        ),
+        h5: ({ children }) => (
+            <h5 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-base font-bold mt-4 mb-2">
+                {children}
+            </h5>
+        ),
+        h6: ({ children }) => (
+            <h6 id={String(children).toLowerCase().replace(/\s+/g, '-')} className="text-sm font-bold mt-4 mb-2">
+                {children}
+            </h6>
         ),
         code({ className, children }) {
             const match = /language-(\w+)/.exec(className || '')
@@ -124,8 +182,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
     return (
         <div className="min-h-screen bg-gray-50 py-12 flex">
             {/* 左侧目录 */}
-            <div className="w-72 flex-shrink-0">
-                <TableOfContents toc={post.toc} />
+            <div className="w-96 flex-shrink-0">
+                <TableOfContents toc={tocData} />
             </div>
             
             <div className="flex-grow max-w-4xl mx-auto px-4">
@@ -147,6 +205,16 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
                     <div className="flex items-center gap-4 text-gray-500 text-sm">
                         <span>{post.readTime} 分钟阅读</span>
+                        {post.category && (
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                                post.category === '知识' ? 'bg-blue-100 text-blue-700' :
+                                post.category === '组件库' ? 'bg-purple-100 text-purple-700' :
+                                post.category === '杂谈' ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-gray-100 text-gray-700'
+                            }`}>
+                                {post.category}
+                            </span>
+                        )}
                     </div>
                     {post.coverImage && (
                         <div className="mt-6 -mx-8">
