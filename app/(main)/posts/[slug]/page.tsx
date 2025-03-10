@@ -12,6 +12,7 @@ import nginx from 'react-syntax-highlighter/dist/esm/languages/prism/nginx'
 import css from 'react-syntax-highlighter/dist/esm/languages/prism/css'
 import type { Components } from 'react-markdown'
 import TableOfContents from '@/app/components/TableOfContents'
+import React from 'react'
 
 // 注册语言支持
 SyntaxHighlighter.registerLanguage('jsx', jsx)
@@ -87,32 +88,47 @@ export default async function PostPage({ params }: { params: { slug: string } })
             const imageSrc = src.startsWith('/') ? src : `/posts/images/${src}`
             
             return (
-                <div className="my-4">
+                <>
                     <Image
                         src={imageSrc}
                         alt={alt || ''}
                         width={800}
                         height={400}
-                        className="rounded-lg mx-auto"
+                        className="rounded-lg mx-auto my-4"
                         style={{ objectFit: 'contain' }}
                     />
                     {alt && (
-                        <p className="text-center text-sm text-gray-500 mt-2">{alt}</p>
+                        <span className="block text-center text-sm text-gray-500 mt-2">{alt}</span>
                     )}
-                </div>
+                </>
             )
         },
-        p({ children }) {
-            return <p className="mb-4 leading-relaxed">{children}</p>
+        p({ children, node }) {
+            // 检查children中是否有块级元素（React组件）
+            // 如果有任何子元素是React组件或包含块级标签的HTML字符串，使用div代替p
+            const hasBlockElements = React.Children.toArray(children).some(child => 
+                React.isValidElement(child) && 
+                ['div', 'section', 'article', 'aside', 'figure', 'blockquote'].includes(
+                    (child.type as any)?.name?.toLowerCase() || ''
+                )
+            );
+            
+            if (hasBlockElements) {
+                return <div className="mb-4 leading-relaxed">{children}</div>;
+            }
+            
+            return <p className="mb-4 leading-relaxed">{children}</p>;
         }
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12">
+        <div className="min-h-screen bg-gray-50 py-12 flex">
             {/* 左侧目录 */}
-            <TableOfContents toc={post.toc} />
+            <div className="w-72 flex-shrink-0">
+                <TableOfContents toc={post.toc} />
+            </div>
             
-            <div className="max-w-4xl mx-auto px-4 ml-96">
+            <div className="flex-grow max-w-4xl mx-auto px-4">
                 {/* 文章头部信息 */}
                 <div className="bg-white rounded-xl shadow-sm p-8 mb-8">
                     <div className="flex items-center gap-4 mb-6">

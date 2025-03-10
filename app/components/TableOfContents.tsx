@@ -11,9 +11,9 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
     }
 
     return (
-        <div className="fixed left-8 top-32 w-64 bg-white rounded-xl shadow-sm p-6">
+        <div className="sticky top-16 bg-white rounded-xl shadow-sm p-6 mx-4" style={{ maxHeight: 'calc(100vh - 160px)' }}>
             <h3 className="text-lg font-semibold mb-4">目录</h3>
-            <nav>
+            <nav className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 240px)' }}>
                 <ul className="space-y-2">
                     {toc?.map((item, index) => (
                         <li 

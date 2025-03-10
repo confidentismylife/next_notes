@@ -44,11 +44,15 @@ export const processMarkdown = (markdownContent: string): any => {
 
 		const wordCount = markdownContent.length
 		const readTime = Math.ceil(wordCount / 300)
+        
+		// 创建摘要 (如果需要)
+		const excerpt = markdownContent.substring(0, 150) + (markdownContent.length > 150 ? '...' : '')
 
 		// 创建结果对象
 		const result: Partial<Post> = {
 			title,
 			content: markdownContent,
+			excerpt,
 			toc,
 			readTime,
 			views: 0,
@@ -140,12 +144,13 @@ export async function getAllPosts(): Promise<Post[]> {
 					}
 				}
 
-				if (content.length > 0) {
-					content = content.substring(0, 100)
-				} else {
+				if (content.length === 0) {
 					throw new Error("文件内容为空")
 				}
-
+                
+				// 创建摘要，但保留完整内容
+				const excerpt = content.substring(0, 150) + (content.length > 150 ? '...' : '')
+                
 				const slug = filename.replace(/\.md$/, "")
 
 				// 检查内容是否为有效的Markdown
@@ -164,6 +169,7 @@ export async function getAllPosts(): Promise<Post[]> {
 					slug,
 					title: postData.title || "无标题",
 					content: postData.content || "",
+					excerpt: excerpt,
 					author: postData.author || "Admin",
 					authorAvatar: postData.authorAvatar || "/avatars/default.png",
 					date: typeof postData.date === "string" ? postData.date : new Date().toISOString(),
@@ -249,7 +255,8 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 		}
 
 		if (content.length > 0) {
-			content = content.substring(0, 100);
+			// 不要截取内容，保留完整的Markdown文件内容
+			// content = content.substring(0, 100);
 		} else {
 			throw new Error("文件内容为空");
 		}

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Post } from './type';
 
 interface ArticleCardProps {
-  post: Post;
+  post?: Post;
   aspectRatio?: string;
 }
 
