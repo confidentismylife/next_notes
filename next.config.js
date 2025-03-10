@@ -15,7 +15,6 @@ const nextConfig = {
         // 禁用未使用的优化
         dangerouslyAllowSVG: false,
         contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-        unoptimized: true, // 静态导出时需要禁用图片优化
     },
     // 优化构建输出
     compress: true,
@@ -66,7 +65,6 @@ const nextConfig = {
         }
         return config;
     },
-    output: 'export', // 添加静态导出配置
     // 配置静态资源前缀
     assetPrefix: '/',
     // 禁用类型检查以支持静态导出
