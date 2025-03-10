@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type { Post } from './type'
+import { CATEGORIES } from './type'
 import ImportMarkdown from './ImportMarkdown'
 import FirstScreenStatic from './FirstScreenStatic'
 import Waterfall from './Waterfall'
@@ -28,6 +29,30 @@ const SecondScreenWrapper = dynamic(() => import("./SecondScreenWrapper"), {
 export default function ClientWrapper() {
 	const [posts, setPosts] = useState<Post[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [activeDate, setActiveDate] = useState<string>('');
+	const [activeCategory, setActiveCategory] = useState<string>(CATEGORIES.ALL);
+	
+	// 添加筛选文章的函数
+	const filteredPosts = () => {
+		let result = [...posts];
+		
+		// 按分类筛选
+		if (activeCategory !== CATEGORIES.ALL) {
+			result = result.filter(post => post.category === activeCategory);
+		}
+		
+		// 按日期筛选（如果有设置activeDate）
+		if (activeDate) {
+			const [year, month] = activeDate.split('-');
+			result = result.filter(post => {
+				const date = new Date(post.date);
+				return date.getFullYear() === parseInt(year) && 
+					(date.getMonth() + 1) === parseInt(month);
+			});
+		}
+		
+		return result;
+	};
 
 	useEffect(() => {
 		const fetchPosts = async () => {
@@ -56,6 +81,18 @@ export default function ClientWrapper() {
 
 		fetchPosts();
 	}, []);
+	
+	// 处理分类变更
+	const handleCategoryChange = (category: string) => {
+		setActiveCategory(category);
+		// 切换分类时重置日期筛选
+		setActiveDate('');
+	};
+	
+	// 处理日期变更
+	const handleDateSelect = (date: string) => {
+		setActiveDate(date === activeDate ? '' : date);
+	};
 
 	return (
 		<>
@@ -63,10 +100,16 @@ export default function ClientWrapper() {
 			<ImportMarkdown />
 			<div className="bg-[#f7f9fe] py-12 flex px-8 gap-8">
 				<div className="w-48 top-16 h-[calc(100vh-4rem)] flex-shrink-0">
-					<Sider posts={posts} />
+					<Sider 
+						posts={posts} 
+						activeDate={activeDate} 
+						onDateSelect={handleDateSelect} 
+						activeCategory={activeCategory}
+						onCategoryChange={handleCategoryChange}
+					/>
 				</div>
 				<div className="flex-1">
-					<Waterfall posts={posts} isLoading={isLoading} />
+					<Waterfall posts={filteredPosts()} isLoading={isLoading} />
 				</div>
 			</div>
 			<SecondScreenWrapper />

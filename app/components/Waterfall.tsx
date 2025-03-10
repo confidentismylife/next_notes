@@ -13,6 +13,14 @@ interface Column {
     posts: Post[]
 }
 
+// 分类标签的颜色映射
+const categoryColors: Record<string, string> = {
+    '知识': 'bg-blue-100 text-blue-700',
+    '组件库': 'bg-purple-100 text-purple-700',
+    '杂谈': 'bg-yellow-100 text-yellow-700',
+    '全部': 'bg-gray-100 text-gray-700'
+};
+
 export default function Waterfall({ posts, isLoading = false }: WaterfallProps) {
     // 根据屏幕宽度设置不同的列数
     const getInitialColumns = () => {
@@ -101,6 +109,13 @@ export default function Waterfall({ posts, isLoading = false }: WaterfallProps) 
                                                 className="object-cover"
                                                 priority={columnIndex === 0}
                                             />
+                                            {post.category && (
+                                                <div className="absolute top-2 right-2">
+                                                    <span className={`text-[8px] px-2 py-1 rounded-full ${categoryColors[post.category] || 'bg-gray-100 text-gray-700'}`}>
+                                                        {post.category}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                     <div className="p-2">
@@ -121,7 +136,12 @@ export default function Waterfall({ posts, isLoading = false }: WaterfallProps) 
                                                 />
                                                 <span className="text-[10px] text-gray-500 truncate ">我只想说无所谓</span>
                                             </div>
-                                   
+                                            {/* 显示文章分类（如果没有封面图，或显示在底部的备选位置） */}
+                                            {!post.coverImage && post.category && (
+                                                <span className={`text-[8px] px-2 py-0.5 rounded-full ${categoryColors[post.category] || 'bg-gray-100 text-gray-700'}`}>
+                                                    {post.category}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
