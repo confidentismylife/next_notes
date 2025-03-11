@@ -83,6 +83,12 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
+    experimental: {
+        serverActions: {
+            bodySizeLimit: '2mb',
+            timeout: 60
+        }
+    },
 }
 
 // 开发环境配置
