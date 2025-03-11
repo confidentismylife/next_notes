@@ -23,6 +23,11 @@ const nextConfig = {
         ],
     },
     swcMinify: true, // 使用 SWC 进行代码压缩
+    compiler: {
+        removeConsole: {
+            exclude: ['error', 'warn', 'info'],
+        },
+    },
     // 优化构建输出
     compress: true,
     poweredByHeader: false,

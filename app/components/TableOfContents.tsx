@@ -98,7 +98,7 @@ export default function TableOfContents({ toc }: TableOfContentsProps) {
     }
 
     return (
-        <div className="sticky top-16 bg-white rounded-xl shadow-sm p-6 mx-4" style={{ maxHeight: 'calc(100vh - 160px)' }}>
+        <div className="sticky top-16 bg-white rounded-xl shadow-sm p-6 mx-4" style={{ maxHeight: 'calc(100vh - 140px)' }}>
             <h3 className="text-xl font-bold mb-4">目录</h3>
             <div className="text-sm text-gray-400 mb-2">{debugInfo}</div>
             <nav className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 240px)' }}>

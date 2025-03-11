@@ -13,6 +13,7 @@ import css from 'react-syntax-highlighter/dist/esm/languages/prism/css'
 import type { Components } from 'react-markdown'
 import TableOfContents from '@/app/components/TableOfContents'
 import React from 'react'
+import AISummaryHelper from '@/app/components/AISummaryHelper'
 
 // 注册语言支持
 SyntaxHighlighter.registerLanguage('jsx', jsx)
@@ -47,10 +48,6 @@ export default async function PostPage({ params }: { params: { slug: string } })
         )
     }
 
-    console.log(`找到文章: ${post.title}`);
-    console.log(`目录数据类型: ${typeof post.toc}`);
-    console.log(`目录数据长度: ${post.toc?.length || 0}`);
-    console.log(`目录数据内容:`, JSON.stringify(post.toc || []));
     
     // 确保目录数据有效
     // 修改这里的逻辑，确保即使在开发环境中也能正确处理目录数据
@@ -73,7 +70,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
     
     // 如果目录仍然为空，但我们有文章内容，尝试手动提取目录
     if (tocData.length === 0 && post.content) {
-        console.log("目录为空，尝试从内容中提取...");
+
         const headingRegex = /^(#{1,6})\s+(.+)$/gm;
         let match;
         while ((match = headingRegex.exec(post.content)) !== null) {
@@ -82,11 +79,8 @@ export default async function PostPage({ params }: { params: { slug: string } })
             const indent = "  ".repeat(level - 1);
             tocData.push(`${indent}${text}`);
         }
-        console.log("手动提取的目录:", tocData);
     }
         
-    // 打印目录数据，用于调试
-    console.log("传递给TableOfContents的目录数据:", tocData);
 
     const components: Components = {
         h1: ({ children }) => (
@@ -179,14 +173,20 @@ export default async function PostPage({ params }: { params: { slug: string } })
         }
     }
 
+    // 确保只传递简单类型给客户端组件
+    const postContent = post?.content ? String(post.content) : "";
+    const postTitle = post?.title ? String(post.title) : "";
+    const postSlug = params.slug ? String(params.slug) : "";
+
     return (
-        <div className="min-h-screen bg-gray-50 py-12 flex">
+        <div className="min-h-screen bg-gray-50 py-12 flex justify-start px-4">
             {/* 左侧目录 */}
             <div className="w-96 flex-shrink-0">
                 <TableOfContents toc={tocData} />
             </div>
             
-            <div className="flex-grow max-w-4xl mx-auto px-4">
+            {/* 中间文章内容 */}
+            <div className="flex-grow max-w-3xl pl-12">
                 {/* 文章头部信息 */}
                 <div className="bg-white rounded-xl shadow-sm p-8 mb-8">
                     <div className="flex items-center gap-4 mb-6">
@@ -230,7 +230,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     )}
                 </div>
 
-                {/* 文章内容 */}
+                {/* 文章内容 */}layers.js
                 <div className="bg-white rounded-xl shadow-sm p-8">
                     <div className="prose prose-lg max-w-none">
                         <ReactMarkdown
@@ -241,6 +241,15 @@ export default async function PostPage({ params }: { params: { slug: string } })
                         </ReactMarkdown>
                     </div>
                 </div>
+            </div>
+            
+            {/* 右侧AI小助手 */}
+            <div className="w-[320px] flex-shrink-0 ml-16">
+                <AISummaryHelper 
+                    content={postContent} 
+                    title={postTitle} 
+                    slug={postSlug} 
+                />
             </div>
         </div>
     )
