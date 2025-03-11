@@ -76,11 +76,11 @@ export default function Waterfall({ posts, isLoading = false }: WaterfallProps) 
 
         window.addEventListener('resize', handleResize)
         return () => window.removeEventListener('resize', handleResize)
-    }, [posts, redistributePosts])
+    }, [posts])
 
     useEffect(() => {
         redistributePosts()
-    }, [posts, redistributePosts])
+    }, [posts])
 
     if (isLoading) {
         return (
