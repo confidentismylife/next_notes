@@ -19,7 +19,7 @@ const nextConfig = {
         domains: [
             "firebasestorage.googleapis.com",
             "raw.githubusercontent.com",
-            'res.cloudinary.com'
+            'res.cloudinary.com',
         ],
     },
     swcMinify: true, // 使用 SWC 进行代码压缩
