@@ -1,4 +1,4 @@
-import { getPostBySlug, getAllPosts } from '@/app/actions/posts'
+import { getPost, getPosts } from '@/app/actions/posts'
 
 import Image from 'next/image'
 import ReactMarkdown from 'react-markdown'
@@ -22,9 +22,9 @@ SyntaxHighlighter.registerLanguage('javascript', javascript)
 SyntaxHighlighter.registerLanguage('nginx', nginx)
 SyntaxHighlighter.registerLanguage('css', css)
 
-// 生成静态路径
+// 生成静态路径 
 export async function generateStaticParams() {
-    const posts = await getAllPosts()
+    const posts = await getPosts()
     // 确保所有 slug 都被正确处理，不包含空格
     return posts.map((post) => ({
         slug: post.slug.trim().replace(/\s+/g, '-'),
@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 // 定义组件
 export default async function PostPage({ params }: { params: { slug: string } }) {
     console.log(`渲染文章页面: ${params.slug}`);
-    const post = await getPostBySlug(params.slug)
+    const post = await getPost(params.slug)
 
     if (!post) {
         console.log(`未找到文章: ${params.slug}`);
@@ -230,7 +230,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                     )}
                 </div>
 
-                {/* 文章内容 */}layers.js
+                {/* 文章内容 */}
                 <div className="bg-white rounded-xl shadow-sm p-8">
                     <div className="prose prose-lg max-w-none">
                         <ReactMarkdown

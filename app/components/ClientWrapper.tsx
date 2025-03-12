@@ -7,7 +7,7 @@ import { CATEGORIES } from './type'
 import ImportMarkdown from './ImportMarkdown'
 import FirstScreenStatic from './FirstScreenStatic'
 import Waterfall from './Waterfall'
-import { getAllPosts } from '../actions/posts'
+import { getPosts } from '../actions/posts'
 import Sider from './Sider'
 
 // 延迟加载组件
@@ -57,27 +57,24 @@ export default function ClientWrapper() {
 	useEffect(() => {
 		const fetchPosts = async () => {
 			try {
-				const data = await getAllPosts();
+				const data = await getPosts();
 				console.log('data', data);
 				
 				// 确保每个 post 都有必要的字段
-				const processedData = data.map(post => {
+				const processedData = data.map((post: any) => {
 					// 确保所有必要的字段都存在
 					return {
 						...post,
-						coverImage: post.coverImage || `/images/covers/${post.slug}.jpg`,
-						excerpt: post.excerpt || (post.content ? post.content.slice(0, 100) : '暂无摘要'),
-						authorAvatar: post.authorAvatar || '/images/default-avatar.jpg'
-					};
-				});
+					}
+				})
 				
-				setPosts(processedData);
-				setIsLoading(false);
+				setPosts(processedData)
+				setIsLoading(false)
 			} catch (error) {
-				console.error('获取文章列表失败:', error);
-				setIsLoading(false);
+				console.error('Failed to fetch posts', error)
+				setIsLoading(false)
 			}
-		};
+		}
 
 		fetchPosts();
 	}, []);
@@ -112,7 +109,7 @@ export default function ClientWrapper() {
 					<Waterfall posts={filteredPosts()} isLoading={isLoading} />
 				</div>
 			</div>
-			<SecondScreenWrapper />
+			{/* <SecondScreenWrapper /> */}
 		</>
 	)
 }

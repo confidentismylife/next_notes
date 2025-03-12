@@ -23,11 +23,11 @@ const nextConfig = {
         ],
     },
     swcMinify: true, // 使用 SWC 进行代码压缩
-    compiler: {
-        removeConsole: {
-            exclude: ['error', 'warn', 'info'],
-        },
-    },
+    // compiler: {
+    //     removeConsole: {
+    //         exclude: ['error', 'warn', 'info'],
+    //     },
+    // },
     // 优化构建输出
     compress: true,
     poweredByHeader: false,
@@ -82,12 +82,6 @@ const nextConfig = {
     // 禁用类型检查以支持静态导出
     typescript: {
         ignoreBuildErrors: true,
-    },
-    experimental: {
-        serverActions: {
-            bodySizeLimit: '2mb',
-            timeout: 60
-        }
     },
 }
 

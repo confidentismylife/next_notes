@@ -6,14 +6,6 @@ import { useState, useMemo } from 'react';
 
 const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
-
-  const navItems = [
-    { href: '/', label: '首页' },
-    { href: '/posts', label: '文章' },
-    { href: '/categories', label: '分类' },
-    { href: '/tags', label: '标签' },
-  ];
-
   // 格式化构建时间
   const formattedBuildTime = useMemo(() => {
     const buildTime = new Date(process.env.BUILD_TIME || '');

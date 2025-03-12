@@ -37,15 +37,15 @@ export default function AISummaryHelper({ content, title, slug }: AISummaryHelpe
         title: String(title) // 确保是字符串
       });
       
-      if (result.error) {
+      // 检查result中是否有error属性
+      if ('error' in result) {
         throw new Error(result.error);
       }
       
-      if (result.summary) {
-        setSummary(result.summary);
-        // 保存到localStorage
-        localStorage.setItem(storageKey, result.summary);
-      }
+      // 此时TypeScript知道result只有summary属性
+      setSummary(result.summary);
+      // 保存到localStorage
+      localStorage.setItem(storageKey, result.summary);
     } catch (err) {
       setError(err instanceof Error ? err.message : '未知错误');
       console.error('获取AI摘要时出错:', err);

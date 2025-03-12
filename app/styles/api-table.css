@@ -1,0 +1,158 @@
+/* API表格样式 */
+.api-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  table-layout: fixed; /* 固定表格布局以更好控制列宽 */
+}
+
+.api-table thead {
+  background-color: #f3f4f6;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.api-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 设置列宽比例 */
+.api-table th:nth-child(1) {
+  width: 15%; /* 参数名 */
+}
+
+.api-table th:nth-child(2) {
+  width: 30%; /* 说明 */
+}
+
+.api-table th:nth-child(3) {
+  width: 35%; /* 类型 */
+}
+
+.api-table th:nth-child(4) {
+  width: 20%; /* 默认值 */
+}
+
+.api-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+  word-break: break-word; /* 允许在单词内换行 */
+  overflow-wrap: break-word; /* 确保长文本正确换行 */
+}
+
+.api-table tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.api-table tr:last-child td {
+  border-bottom: none;
+}
+
+.api-table tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+/* 类型高亮 - 通用样式 */
+.type, .api-table .type {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: #059669;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  background-color: rgba(5, 150, 105, 0.1);
+  word-break: break-all;
+  font-size: 0.85em;
+  line-height: 1.6;
+  display: inline-block;
+}
+
+/* 参数名称高亮 - 通用样式 */
+.param, .api-table .param {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* 默认值高亮 - 通用样式 */
+.default-value, .api-table .default-value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  color: #6b7280;
+  word-break: break-all;
+  font-size: 0.85em;
+}
+
+/* 可滚动容器 */
+.table-container {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .api-table {
+    font-size: 0.8rem;
+  }
+  
+  .api-table th,
+  .api-table td {
+    padding: 8px 12px;
+  }
+}
+
+/* 单个表格单元格样式 */
+.api-table.single-cell {
+  box-shadow: none;
+  border: none;
+  width: auto;
+  display: inline-block;
+  margin: 0;
+  overflow: visible;
+}
+
+.api-table.single-cell tbody tr td {
+  padding: 0.2em 0;
+  border: none;
+  background: transparent;
+}
+
+/* 确保单元格中的类型标记正确显示 */
+.api-table.single-cell .type,
+.api-table.single-cell .param,
+.api-table.single-cell .default-value {
+  display: inline-block;
+}
+
+/* 单元格内的代码元素样式 */
+.api-table.single-cell code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  padding: 0.2em 0.4em;
+  font-size: 0.9em;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 单行表格样式 */
+.api-table-row {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #374151;
+  white-space: pre;
+  overflow-x: auto;
+} 
