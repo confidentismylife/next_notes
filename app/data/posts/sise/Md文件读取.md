@@ -39,21 +39,36 @@ while ((match = regex.exec(content)) !== null) {
 
 ### **3. 并行任务处理**
 ```typescript
-// 并行任务处理
-const tasks: Promise<Post>[] = []
-for (const category of CONFIG.CATEGORIES) {
-  const files = await fs.readdir(dir)
-  files.filter(f => f.endsWith('.md')).forEach(file => {
-    tasks.push(/* 缓存或处理逻辑 */)
-  })
-}
-const posts = await Promise.all(tasks) // 并行执行
+async function runWithConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
+	const results: T[] = [];
+	const queue = [...tasks]; // 创建任务队列副本
+	const activeTasks = new Set<Promise<void>>(); // 存储当前正在执行的任务
 
-// 容错机制
-try {
-  // 文件操作
-} catch (err) {
-  console.error(`读取目录失败: ${dir}`, err) // 异常捕获
+	async function worker(): Promise<void> {
+		while (queue.length > 0) {
+			const task = queue.shift(); // 从队列取出任务
+			if (task) {
+				const promise = task().then(result => {
+					results.push(result);
+					activeTasks.delete(promise); // 完成后移除任务
+				}).catch(error => {
+					console.error('任务执行失败:', error);
+					activeTasks.delete(promise); // 错误处理后移除任务
+				});
+
+				activeTasks.add(promise); // 添加到当前任务集合
+
+				if (activeTasks.size >= concurrency) {
+					await Promise.race(activeTasks); // 等待任意一个任务完成
+				}
+			}
+		}
+	}
+
+	// 启动指定数量的工作线程
+	const workers = Array(concurrency).fill(null).map(() => worker());
+	await Promise.all(workers); // 等待所有Worker完成
+	return results;
 }
 ```
 

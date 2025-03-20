@@ -182,6 +182,15 @@ export default function CodeBlock({ className, children, inline, ...props }: any
   const langMatch = /language-(\w+)/.exec(className || '')
   const language = langMatch?.[1] || 'text'
   
+  // 调试代码
+  console.log('CodeBlock渲染:', { 
+    className, 
+    langMatch, 
+    language,
+    contentStart: content.substring(0, 30),
+    contentLength: content.length
+  })
+  
   // 判断各种内容类型
   const isTypeValue = !langMatch && (
     // 常见React和JS类型
@@ -334,7 +343,12 @@ export default function CodeBlock({ className, children, inline, ...props }: any
       style={tomorrow}
       PreTag="pre" 
       CodeTag="code"
-      customStyle={{ margin: 0, borderRadius: '0.5rem' }}
+      customStyle={{ 
+        margin: 0, 
+        borderRadius: '0.5rem',
+        backgroundColor: '#1e293b', // 强制使用深色背景 
+        color: '#e2e8f0'  // 强制使用浅色文本
+      }}
       className="rounded-lg my-4 text-sm"
       showLineNumbers
     >
